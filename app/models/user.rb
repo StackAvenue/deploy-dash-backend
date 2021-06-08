@@ -20,8 +20,9 @@ class User < ApplicationRecord
 
     def get_user_details(access_token)
       user_details = User.where(access_token: "#{access_token}")
-      return render_error(message: 'Invalid or empty access token!!') if access_token.nil?
-      user_details
+      return {success: false, message: 'Invalid or empty access token!!'} if user_details.first.nil?
+      user_details = {user: User.to_json(user_details)}
+      return {success: true, data: user_details}
     end
       
   end

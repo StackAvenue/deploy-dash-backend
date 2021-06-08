@@ -1,6 +1,6 @@
 class User < ApplicationRecord
 
-  # validates_uniqueness_of :login, :git_id
+  validates_uniqueness_of :login, :git_id
 
   OAUTH_TYPES = {
     github: :github
@@ -13,9 +13,8 @@ class User < ApplicationRecord
   class << self
     def register_oauth_user(oauth_service_name, oauth_data)
       user_details = OAUTH_SERVICE_NAME[oauth_service_name].constantize.get_basic_user_details(oauth_data)
-      user = User.create_user(user_details)
-      # return user = User.create_user(user_details) unless User.exists(user_details)?
-      # return user = User.update(access_token: user_details[:access_token])
+      return user = User.create_user(user_details) unless User.exists(user_details)
+      return user = User.update(access_token: user_details[:access_token])
     end
 
     def get_user_details(access_token)

@@ -1,6 +1,6 @@
 class User < ApplicationRecord
 
-  validates_uniqueness_of :login, :git_id
+  # validates_uniqueness_of :login, :git_id
 
   OAUTH_TYPES = {
     github: :github

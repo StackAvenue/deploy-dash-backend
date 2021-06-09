@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2021_06_04_120323) do
     t.integer "git_id"
     t.text "avatar_url"
     t.text "url"
+    t.text "repos_url"
     t.text "organisations_url"
     t.text "received_events_url"
     t.string "name"

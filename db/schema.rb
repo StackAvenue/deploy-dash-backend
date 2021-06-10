@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2021_06_04_120323) do
     t.text "avatar_url"
     t.text "url"
     t.text "repos_url"
+    t.text "repositories"
     t.text "organisations_url"
     t.text "received_events_url"
     t.string "name"

@@ -7,6 +7,7 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.text :avatar_url
       t.text :url
       t.text :repos_url
+      t.text :repositories
       t.text :organisations_url
       t.text :received_events_url
       t.string :name

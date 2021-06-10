@@ -7,11 +7,13 @@ class Github
     return { success: access_data[:success], message: access_data[:error] } unless access_data[:success]
 
     user_details = get_user_details(access_data)
+    repos_url = get_repo_url(user_details)
+    repos = repositories(repos_url)
     user_details = user_details.slice(
       'login', 'id', 'avatar_url', 'url', 'organisations_url', 'received_events_url', 'name',
       'company', 'blog', 'location', 'email', 'bio', 'created_at', 'twitter_username'
     )
-    { success: true, user_details: user_details, access_token: access_data[:access_token] }
+    { success: true, user_details: user_details, repos_url: repos_url, repositories: repos, access_token: access_data[:access_token] }
   end
 
   def self.get_access_token(code)
@@ -24,6 +26,16 @@ class Github
     { success: false, error: json_response['error_description'] }
   end
 
+  def self.get_repo_url(user_details)
+    url = user_details['url']
+    response = RestClient::Request.execute(
+      method: :get,
+      url: url
+    )
+    user = JSON.parse(response.body)
+    user['repos_url']
+  end
+
   def self.get_user_details(access_data)
     url = 'https://api.github.com/user'
     response = RestClient::Request.execute(
@@ -32,5 +44,22 @@ class Github
       headers: { Authorization: "token #{access_data[:access_token]}" }
     )
     JSON.parse(response.body)
+  end
+
+  def self.repositories(repos_url)
+    response = RestClient::Request.execute(
+      method: :get,
+      url: repos_url
+    )
+    repositories = JSON.parse(response.body)
+    repo_array = []
+    repositories.each do |repo|
+      name = repo['name']
+      full_name = repo['full_name']
+      branches = repo['branches_url']
+      hash = { name: name, full_name: full_name, branches_url: branches }
+      repo_array << hash
+    end
+    repo_array
   end
 end

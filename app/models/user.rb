@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  serialize :repositories, Array
   validates_uniqueness_of :login, :git_id
 
   OAUTH_TYPES = {
@@ -24,6 +25,23 @@ class User < ApplicationRecord
       { success: true, data: user_details }
     end
 
+    def get_repositories(oauth_service_name, access_token)
+      user = get_user_details(access_token)
+      return user unless user[:success]
+
+      repos_url = user[:data][:user]['repos_url']
+      repositories = OAUTH_SERVICE_NAME[oauth_service_name].constantize.repositories(repos_url)
+      repo_names = []
+      repositories.each do |repo|
+        name = repo[:name]
+        full_name = repo[:full_name]
+        hash = { name: name, full_name: full_name }
+        repo_names << hash
+      end
+      repositories_names = { repositories: repo_names }
+      { success: true, data: repositories_names }
+    end
+
     def create_user(user_details)
       user = User.create(
         access_token: user_details[:access_token],
@@ -31,6 +49,8 @@ class User < ApplicationRecord
         git_id: user_details[:user_details]['id'],
         avatar_url: user_details[:user_details]['avatar_url'],
         url: user_details[:user_details]['url'],
+        repos_url: user_details[:repos_url],
+        repositories: user_details[:repositories],
         organisations_url: user_details[:user_details]['organisations_url'],
         received_events_url: user_details[:user_details]['received_events_url'],
         name: user_details[:user_details]['name'],

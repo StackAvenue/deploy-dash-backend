@@ -6,4 +6,12 @@ class Api::V1::UsersController < Api::V1::ResponseController
 
     render_success(data: user_details[:data])
   end
+
+  def repositories
+    access_token = params['access_token']
+    repositories = User.get_repositories(User::OAUTH_TYPES[:github], access_token)
+    render_error(message: repositories[:message]) && return unless repositories[:success]
+
+    render_success(data: repositories[:data])
+  end
 end

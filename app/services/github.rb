@@ -13,12 +13,27 @@ class Github
       'login', 'id', 'avatar_url', 'url', 'organisations_url', 'received_events_url', 'name',
       'company', 'blog', 'location', 'email', 'bio', 'created_at', 'twitter_username'
     )
-    { success: true, user_details: user_details, repos_url: repos_url, repositories: repos, access_token: access_data[:access_token] }
+    {
+      success: true, user_details: user_details, repos_url: repos_url,
+      repositories: repos, access_token: access_data[:access_token]
+    }
   end
 
   def self.get_access_token(code)
     url = 'https://github.com/login/oauth/access_token'
-    response = RestClient::Request.execute(method: :post, url: url, headers: { params: {client_id: "#{ENV['CLIENT_ID']}", client_secret: "#{ENV['CLIENT_SECRET']}", code: "#{code}"}, Accept: 'application/json' })
+    response = RestClient::Request.execute(
+      method: :post,
+      url: url,
+      headers: {
+        params:
+        {
+          client_id: "#{ENV['CLIENT_ID']}",
+          client_secret: "#{ENV['CLIENT_SECRET']}",
+          code: "#{code}"
+        },
+        Accept: 'application/json'
+      }
+    )
     json_response = JSON.parse(response.body)
     access_token = json_response['access_token']
     return { success: true, access_token: access_token } unless access_token.nil?
@@ -61,5 +76,20 @@ class Github
       repo_array << hash
     end
     repo_array
+  end
+
+  def self.branches(branches_url)
+    response = RestClient::Request.execute(
+      method: :get,
+      url: branches_url
+    )
+    branches = JSON.parse(response.body)
+    branches_array = []
+    branches.each do |branch|
+      name = branch['name']
+      hash = { name: name }
+      branches_array << hash
+    end
+    branches_array
   end
 end

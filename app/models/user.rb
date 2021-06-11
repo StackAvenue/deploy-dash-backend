@@ -19,7 +19,7 @@ class User < ApplicationRecord
 
     def get_user_details(access_token)
       user_details = User.where(access_token: access_token)
-      return { success: false, message: 'Invalid or empty access token!!' } if user_details.first.nil?
+      return { success: false, message: 'Invalid access token!!' } if user_details.first.nil?
 
       user_details = { user: User.to_json(user_details) }
       { success: true, data: user_details }
@@ -31,6 +31,11 @@ class User < ApplicationRecord
 
       repos_url = user[:data][:user]['repos_url']
       repositories = OAUTH_SERVICE_NAME[oauth_service_name].constantize.repositories(repos_url)
+      repositories_details = get_repository_names_and_url(repositories)
+      { success: true, data: repositories_details }
+    end
+
+    def get_repository_names_and_url(repositories)
       repo_names = []
       repositories.each do |repo|
         name = repo[:name]
@@ -38,8 +43,21 @@ class User < ApplicationRecord
         hash = { name: name, full_name: full_name }
         repo_names << hash
       end
-      repositories_names = { repositories: repo_names }
-      { success: true, data: repositories_names }
+      { repositories: repo_names }
+    end
+
+    def get_branches(oauth_service_name, access_token, repository_name)
+      user = get_user_details(access_token)
+      return user unless user[:success]
+
+      user_repositories = user[:data][:user]['repositories']
+      branches = user_repositories.find{ |repo| repo['full_name'] == repository_name }
+      return { sucess: false, message: 'Invalid or empty branch name' } if branches.nil?
+
+      branches_url = branches['branches_url'].gsub('{/branch}', '')
+      branches = OAUTH_SERVICE_NAME[oauth_service_name].constantize.branches(branches_url)
+      all_branches = { branches: branches }
+      { success: true, data: all_branches }
     end
 
     def create_user(user_details)

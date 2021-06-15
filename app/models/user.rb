@@ -31,6 +31,7 @@ class User < ApplicationRecord
 
       repos_url = user[:data][:user]['repos_url']
       repositories = OAUTH_SERVICE_NAME[oauth_service_name].constantize.repositories(repos_url)
+      update_repositories(repositories)
       repositories_details = get_repository_names_and_url(repositories)
       { success: true, data: repositories_details }
     end
@@ -95,6 +96,11 @@ class User < ApplicationRecord
       user = User.update(access_token: access_token[:access_token])
       user = { user: User.to_json(user) }
       { data: user, success: true }
+    end
+
+    def update_repositories(repositories)
+      User.update(repositories: repositories)
+      { success: true }
     end
 
     def to_json(user)

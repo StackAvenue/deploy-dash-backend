@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   serialize :repositories, Array
   validates_uniqueness_of :login, :git_id
+  validates_presence_of :access_token, :git_id
 
   OAUTH_TYPES = {
     github: :github

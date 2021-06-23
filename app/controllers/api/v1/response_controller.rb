@@ -1,3 +1,6 @@
+# frozen_string_literal: false
+
+# this is response controller
 class Api::V1::ResponseController < ApplicationController
   def render_success(data: nil, status: 200)
     render json: data, status: status

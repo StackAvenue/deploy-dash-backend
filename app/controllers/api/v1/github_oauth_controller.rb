@@ -1,3 +1,6 @@
+# frozen_string_literal: false
+
+# this is github oauth controller
 class Api::V1::GithubOauthController < Api::V1::ResponseController
   def authorise_user
     code = params['code']

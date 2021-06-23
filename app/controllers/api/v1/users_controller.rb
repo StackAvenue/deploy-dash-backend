@@ -1,3 +1,6 @@
+# frozen_string_literal: false
+
+# this is users controller
 class Api::V1::UsersController < Api::V1::ResponseController
   def show
     user_details = User.get_user_details(@access_token)

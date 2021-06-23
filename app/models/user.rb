@@ -1,6 +1,9 @@
+# frozen_string_literal: false
+
+# this is user model
 class User < ApplicationRecord
   serialize :repositories, Array
-  validates_uniqueness_of :login, :git_id
+  validates_uniqueness_of :login, :git_id, :access_token
   validates_presence_of :access_token, :git_id
 
   OAUTH_TYPES = {

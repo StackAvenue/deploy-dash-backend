@@ -20,7 +20,7 @@ class Github
   end
 
   def self.get_access_token(code)
-    url = 'https://github.com/login/oauth/access_token'
+    url = ENV['GIT_OAUTH_LOGIN_URL']
     response = RestClient::Request.execute(
       method: :post,
       url: url,
@@ -52,7 +52,7 @@ class Github
   end
 
   def self.get_user_details(access_data)
-    url = 'https://api.github.com/user'
+    url = ENV['GIT_USER_DETAILS_URL']
     response = RestClient::Request.execute(
       method: :get,
       url: url,

@@ -10,4 +10,8 @@ class Api::V1::ResponseController < ApplicationController
   def render_unauthorized(message: nil, status: 401)
     render json: { message: message }, status: status
   end
+  
+  def render_standard_error(message: nil, status: 500)
+    render json: { message: message }, status: status
+  end
 end

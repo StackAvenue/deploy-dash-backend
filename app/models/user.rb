@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   validates_uniqueness_of :login, :git_id, :email
+  validates_presence_of :access_token
 
   OAUTH_TYPES = {
     github: :github
@@ -55,7 +56,9 @@ class User < ApplicationRecord
 
     def update_details(access_token)
       user = User.update(access_token: access_token[:access_token])
+      byebug
       user = { user: User.to_json(user) }
+      return {message: 'Could not Authorise User' ,success: false} unless user[:user]["access_token"] == access_token[:access_token]
       { data: user, success: true }
     end
 

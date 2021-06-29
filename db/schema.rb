@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2021_06_04_120323) do
     t.string "twitter_username"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["login", "git_id", "email"], name: "index_users_on_login_and_git_id_and_email", unique: true
   end
 
 end

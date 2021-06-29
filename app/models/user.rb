@@ -56,7 +56,6 @@ class User < ApplicationRecord
 
     def update_details(access_token)
       user = User.update(access_token: access_token[:access_token])
-      byebug
       user = { user: User.to_json(user) }
       return {message: 'Could not Authorise User' ,success: false} unless user[:user]["access_token"] == access_token[:access_token]
       { data: user, success: true }

@@ -4,5 +4,8 @@ class Api::V1::GithubOauthController < Api::V1::ResponseController
     render_unauthorized(message: user[:message]) && return unless user[:success]
 
     render_success(data: user[:data])
+  
+  rescue StandardError
+    render_standard_error(message: 'Something went wrong')
   end
 end

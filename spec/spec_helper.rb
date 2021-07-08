@@ -93,4 +93,11 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+  require 'webmock/rspec'
+  WebMock.disable_net_connect!(allow_localhost: true)
+  config.before(:each) do
+    stub_request(:get, /api.github.com/).
+      with(headers: {'Accept'=>'*/*', 'User-Agent'=>'Ruby'}).
+      to_return(status: 200, body: "stubbed response", headers: {})
+  end
 end

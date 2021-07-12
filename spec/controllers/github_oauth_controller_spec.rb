@@ -1,12 +1,26 @@
 require 'spec_helper'
-require "rails_helper"
 
 RSpec.describe Api::V1::GithubOauthController, type: :controller do
-  describe "GET authorise_user" do
+  describe "authorise_user" do
     it "returns a 200" do
-      request.headers["Authorization"] = "foo"
-      
-      expect(response).to have_http_status(:ok)
+      git_response = {
+        status: 200,
+        data: [login: "login", git_id: 342425 ]
+      }
+      stub_request(:get, "https://github.com/login/oauth/access_token").
+      to_return(status: 200, body: git_response.to_json)
+      expect(git_response).to be_kind_of(Hash)
+      expect(git_response).to have_key(:status)
+      expect(git_response).to have_key(:data)
+    end
+
+    it 'returns a 401' do
+      git_response = {
+        status:  401,
+        message: 'empty or invalid code'
+      }
+      expect(git_response).to have_key(:status)
+      expect(git_response).to have_key(:message)
     end
   end
 end

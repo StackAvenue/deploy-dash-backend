@@ -7,7 +7,7 @@ RSpec.describe Api::V1::GithubOauthController, type: :controller do
         status: 200,
         data: [login: "login", git_id: 342425 ]
       }
-      stub_request(:get, "https://github.com/login/oauth/access_token").
+      stub_request(:get, ENV["GIT_OAUTH_LOGIN_URL"]).
       to_return(status: 200, body: git_response.to_json)
       expect(git_response).to be_kind_of(Hash)
       expect(git_response).to have_key(:status)

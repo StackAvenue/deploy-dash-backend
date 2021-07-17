@@ -5,12 +5,12 @@ FactoryBot.define do
     access_token { Faker::Number.number }
     git_id { Faker::Number.number(digits: 4) }
     login { Faker::Name.name }
-    avatar_url { Faker::Name.name }
-    url { Faker::Name.name }
-    repos_url { Faker::Name.name }
-    organisations_url { Faker::Name.name }
+    avatar_url { Faker::Internet.url(host: 'git') }
+    url { Faker::Internet.url(host: 'git') }
+    repos_url { Faker::Internet.url(host: 'git')  }
+    organisations_url { Faker::Internet.url(host: 'git') }
     repositories { [Faker::Name.name] }
-    received_events_url { Faker::Name.name }
+    received_events_url {Faker::Internet.url(host: 'git') }
     company { Faker::Name.name }
     name { Faker::Name.name }
     blog { Faker::Name.name }

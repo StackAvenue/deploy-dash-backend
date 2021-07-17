@@ -7,6 +7,9 @@ class Api::V1::UsersController < Api::V1::ResponseController
     render_unauthorized(message: user_details[:message]) && return unless user_details[:success]
 
     render_success(data: user_details[:data])
+
+  rescue StandardError
+    render_standard_error(message: 'Something went wrong')
   end
 
   def repositories
@@ -14,6 +17,9 @@ class Api::V1::UsersController < Api::V1::ResponseController
     render_unauthorized(message: repositories[:message]) && return unless repositories[:success]
 
     render_success(data: repositories[:data])
+
+  rescue StandardError
+    render_standard_error(message: 'Something went wrong')
   end
 
   def branches
@@ -24,5 +30,8 @@ class Api::V1::UsersController < Api::V1::ResponseController
     return render_error(message: branches[:message]) if branches[:message] == 'Invalid or empty branch name'
 
     render_success(data: branches[:data])
+
+  rescue StandardError
+    render_standard_error(message: 'Something went wrong')
   end
 end
